@@ -9,10 +9,12 @@ from tkinter import (
     Tk,
     Label,
     Entry,
-    StringVar,
+    Frame,
     Button,
     filedialog
 )
+
+from pyparsing import col
 
 def create_sheet(stickers):
     width, height = stickers[0].size
@@ -23,7 +25,7 @@ def create_sheet(stickers):
         for column in range(4):
             sticker_sheet.paste(stickers[num],(column * width, row * height))
             num += 1
-    
+
     return sticker_sheet
 
 def load_file():
@@ -97,12 +99,18 @@ def generate_stickers():
 
 def get_parameters():
     global parameters
-    parameters['font_size'] = int(font_size_entry.get())
-    parameters['highlight_padding'] = int(highlight_padding_entry.get())
-    parameters['sticker_width'] = int(sticker_width_entry.get())
-    parameters['sticker_height'] = int(sticker_height_entry.get())
-    parameters['dot_radius'] = int(dot_radius_entry.get())
-    parameters['dot_spacing'] = int(dot_spacing_entry.get())
+    for key in parameters:
+        for widget in parameters[key].winfo_children():
+            if widget.winfo_class() == 'Entry':
+                parameters[key] = int(widget.get())
+
+def create_labeled_entry_box(parent, text, font):
+    frame = Frame(parent)
+    label = Label(frame, text=text, font=font)
+    entry = Entry(frame, font=font)
+    label.grid(row=0,column=0)
+    entry.grid(row=0, column=1)
+    return frame
 
 if __name__ == '__main__':
     global parameters
@@ -124,37 +132,14 @@ if __name__ == '__main__':
     root = Tk()
     root.title(string='number plate sticker tool')
 
-    global window_width
     wwidth = 320
-    global wheihgt
     wheight = 240 
     root.geometry(str(wwidth) + 'x' + str(wheight))
     root.resizable(False, False)
 
-    font_size_label = Label(root, text="font size:", font=font)
-    global font_size_entry
-    font_size_entry = Entry(root, font=font)
+    for key in parameters:
+        parameters[key] = create_labeled_entry_box(root, key + ':', font)
 
-    highlight_padding_label = Label(root, text="text highlight padding:", font=font)
-    global highlight_padding_entry
-    highlight_padding_entry = Entry(root, font=font)
-
-    sticker_width_label = Label(root, text="sticker width (px):", font=font)
-    global sticker_width_entry
-    sticker_width_entry = Entry(root, font=font)
-
-    sticker_height_label = Label(root, text="sticker height (px):", font=font)
-    global sticker_height_entry
-    sticker_height_entry = Entry(root, font=font)
-
-    dot_radius_label = Label(root, text="dot radius (px):", font=font)
-    global dot_radius_entry
-    dot_radius_entry = Entry(root, font=font)
-
-    dot_spacing_label = Label(root, text="dot spacing (px):", font=font)
-    global dot_spacing_entry
-    dot_spacing_entry = Entry(root, font=font)
-    
     global file_entry_box
     file_entry_box = Entry(root, width=41, font=font)
 
@@ -162,22 +147,14 @@ if __name__ == '__main__':
     generate_button = Button(root, text="generate stickers", width=16, command=generate_stickers, font=font)
 
     ### layout ###
-    font_size_label.grid(row=0, column=0)
-    font_size_entry.grid(row=0, column=1)
-    highlight_padding_label.grid(row=1, column=0)
-    highlight_padding_entry.grid(row=1, column=1)
+    row = 0
+    for entry in parameters.values():
+        entry.grid(row=row, column=0, columnspan=2)
+        row += 1
 
-    sticker_width_label.grid(row=2, column=0)
-    sticker_width_entry.grid(row=2, column=1)
-    sticker_height_label.grid(row=3, column=0)
-    sticker_height_entry.grid(row=3, column=1)
-    dot_radius_label.grid(row=4, column=0)
-    dot_radius_entry.grid(row=4, column=1)
-    dot_spacing_label.grid(row=5, column=0)
-    dot_spacing_entry.grid(row=5, column=1)
+    file_entry_box.grid(row=row, column=0, columnspan=2)
+    row += 1
+    load_button.grid(row=row, column=0)
+    generate_button.grid(row=row, column=1)
 
-    file_entry_box.grid(row=6, column=0, columnspan=2)
-    load_button.grid(row=7, column=0)
-    generate_button.grid(row=7, column=1)
-    
     root.mainloop()
