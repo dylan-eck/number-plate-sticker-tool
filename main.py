@@ -95,10 +95,6 @@ def generate_stickers():
         else:
             image_buffer.append(image)
 
-def init_parameters():
-    for key in parameters:
-        parameters[key] = StringVar()
-
 def get_parameters():
     global parameters
     parameters['font_size'] = int(font_size_entry.get())
@@ -135,31 +131,29 @@ if __name__ == '__main__':
     root.geometry(str(wwidth) + 'x' + str(wheight))
     root.resizable(False, False)
 
-    init_parameters()
-
     font_size_label = Label(root, text="font size:", font=font)
     global font_size_entry
-    font_size_entry = Entry(root, textvariable=parameters['font_size'], font=font)
+    font_size_entry = Entry(root, font=font)
 
     highlight_padding_label = Label(root, text="text highlight padding:", font=font)
     global highlight_padding_entry
-    highlight_padding_entry = Entry(root, textvariable=parameters['highlight_padding'], font=font)
+    highlight_padding_entry = Entry(root, font=font)
 
     sticker_width_label = Label(root, text="sticker width (px):", font=font)
     global sticker_width_entry
-    sticker_width_entry = Entry(root, textvariable=parameters['sticker_width'], font=font)
+    sticker_width_entry = Entry(root, font=font)
 
     sticker_height_label = Label(root, text="sticker height (px):", font=font)
     global sticker_height_entry
-    sticker_height_entry = Entry(root, textvariable=parameters['sticker_height'], font=font)
+    sticker_height_entry = Entry(root, font=font)
 
     dot_radius_label = Label(root, text="dot radius (px):", font=font)
     global dot_radius_entry
-    dot_radius_entry = Entry(root, textvariable=parameters['dot_radius'], font=font)
+    dot_radius_entry = Entry(root, font=font)
 
     dot_spacing_label = Label(root, text="dot spacing (px):", font=font)
     global dot_spacing_entry
-    dot_spacing_entry = Entry(root, textvariable=parameters['dot_spacing'], font=font)
+    dot_spacing_entry = Entry(root, font=font)
     
     global file_entry_box
     file_entry_box = Entry(root, width=41, font=font)
