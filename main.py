@@ -1,5 +1,4 @@
 import os
-from venv import create
 import pandas as pd
 from PIL import (
     Image,
@@ -15,8 +14,6 @@ from tkinter import (
     filedialog
 )
 
-from pyparsing import col
-
 def create_sheet(stickers):
     width, height = stickers[0].size
     sticker_sheet = Image.new(mode="RGB", size=(width * 4, height * 6))
@@ -24,7 +21,7 @@ def create_sheet(stickers):
     num = 0
     for row in range(6):
         for column in range(4):
-            sticker_sheet.paste(stickers[num],(column * width, row * height))
+            sticker_sheet.paste(stickers[num], (column * width, row * height))
             num += 1
 
     return sticker_sheet
@@ -45,7 +42,6 @@ def load_file():
 def generate_stickers():
     update_parameter_variables()
     global parameter_entry_dict
-
     sticker_width = parameter_entry_dict['sticker width']
     sticker_height = parameter_entry_dict['sticker height']
     dot_radius = parameter_entry_dict['dot radius']
