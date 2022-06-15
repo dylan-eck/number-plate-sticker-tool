@@ -26,7 +26,7 @@ def create_sheet(stickers):
 
     return sticker_sheet
 
-def load_file():
+def choose_file():
     global filename
     filename = filedialog.askopenfilename(
         initialdir="/",
@@ -51,7 +51,7 @@ def generate_stickers():
 
     global filename
     if not filename:
-        load_file()
+        choose_file()
 
     if not os.path.exists('out'):
         os.mkdir('out')
@@ -66,7 +66,11 @@ def generate_stickers():
         color = row[1]
         subgroup = row[2]
 
-        image = Image.new(mode="RGB", size=(sticker_width, sticker_height), color=color)
+        image = Image.new(
+            mode="RGB",
+            size=(sticker_width, sticker_height),
+            color=color
+        )
         draw = ImageDraw.Draw(image)
 
         if subgroup == 'polka dot':
@@ -86,12 +90,38 @@ def generate_stickers():
 
                     draw.ellipse((p1, p2), fill='white')
 
-        draw.rectangle([(0, 0), (sticker_width, sticker_height)], outline='white', width=4, fill=None)
+        draw.rectangle(
+            [(0, 0), (sticker_width, sticker_height)],
+            outline='white',
+            width=4,
+            fill=None
+        )
 
         font = ImageFont.truetype("Arial.ttf", font_size)
-        x0, y0, x1, y1 = draw.textbbox((sticker_width / 2, sticker_height / 2), plate_number, font=font, anchor='mm')
-        draw.rectangle([(x0 - highlight_padding, y0 - highlight_padding), (x1 + highlight_padding, y1 + highlight_padding)], outline=(110, 110, 100), width=4, fill='white')
-        draw.text((sticker_width / 2, sticker_height / 2), plate_number, fill="Black", font=font, anchor='mm')
+        x0, y0, x1, y1 = draw.textbbox(
+            (sticker_width / 2, sticker_height / 2),
+            plate_number,
+            font=font,
+            anchor='mm'
+        )
+
+        draw.rectangle(
+            [
+                (x0 - highlight_padding, y0 - highlight_padding),
+                (x1 + highlight_padding, y1 + highlight_padding)
+            ],
+            outline=(110, 110, 100),
+            width=4,
+            fill='white'
+        )
+        
+        draw.text(
+            (sticker_width / 2, sticker_height / 2),
+            plate_number,
+            fill="Black",
+            font=font,
+            anchor='mm'
+        )
 
         if len(image_buffer) == 24:
             sticker_sheet = create_sheet(image_buffer)
@@ -157,8 +187,20 @@ if __name__ == '__main__':
     global file_entry_box
     file_entry_box = Entry(root, width=41, font=font)
 
-    load_button = Button(root, text="load file", width=16, command=load_file, font=font)
-    generate_button = Button(root, text="generate stickers", width=16, command=generate_stickers, font=font)
+    load_button = Button(
+        root,
+        text="choose file",
+        width=16,
+        command=choose_file,
+        font=font
+    )
+    generate_button = Button(
+        root,
+        text="generate stickers",
+        width=16,
+        command=generate_stickers, 
+        font=font
+    )
 
     ### layout ###
     row = 0
