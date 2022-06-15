@@ -42,12 +42,12 @@ def choose_file():
 def generate_stickers():
     update_parameter_variables()
     global parameter_entry_dict
-    sticker_width = parameter_entry_dict['sticker width']
-    sticker_height = parameter_entry_dict['sticker height']
-    dot_radius = parameter_entry_dict['dot radius']
-    dot_spacing = parameter_entry_dict['dot spacing']
-    font_size = parameter_entry_dict['font size']
-    highlight_padding = parameter_entry_dict['highlight padding']
+    sticker_width = parameter_entry_dict['sticker width'].value
+    sticker_height = parameter_entry_dict['sticker height'].value
+    dot_radius = parameter_entry_dict['dot radius'].value
+    dot_spacing = parameter_entry_dict['dot spacing'].value
+    font_size = parameter_entry_dict['font size'].value
+    highlight_padding = parameter_entry_dict['highlight padding'].value
 
     global filename
     if not filename:
@@ -65,6 +65,9 @@ def generate_stickers():
         plate_number = row[0]
         color = row[1]
         subgroup = row[2]
+
+        skills = row[3:]
+        skills_str = f'{skills[0]}{skills[1]}{skills[2]}{skills[3]}'
 
         image = Image.new(
             mode="RGB",
@@ -97,11 +100,13 @@ def generate_stickers():
             fill=None
         )
 
-        font = ImageFont.truetype("Arial.ttf", font_size)
+        main_font = ImageFont.truetype("Arial.ttf", font_size)
+        sub_font = ImageFont.truetype("Arial.ttf", int(font_size * 0.8))
+
         x0, y0, x1, y1 = draw.textbbox(
             (sticker_width / 2, sticker_height / 2),
-            plate_number,
-            font=font,
+            f'{plate_number}\n{skills_str}',
+            font=main_font,
             anchor='mm'
         )
 
@@ -116,10 +121,18 @@ def generate_stickers():
         )
         
         draw.text(
-            (sticker_width / 2, sticker_height / 2),
+            (sticker_width / 2, sticker_height / 2 - font_size / 2),
             plate_number,
             fill="Black",
-            font=font,
+            font=main_font,
+            anchor='mm'
+        )
+
+        draw.text(
+            (sticker_width / 2, sticker_height / 2 + font_size / 2),
+            f'{skills_str}',
+            fill="Black",
+            font = sub_font,
             anchor='mm'
         )
 
@@ -136,7 +149,7 @@ def update_parameter_variables():
     for key in parameter_entry_dict:
         for widget in parameter_entry_dict[key].entry_frame.winfo_children():
             if widget.winfo_class() == 'Entry':
-                parameter_entry_dict[key] = int(widget.get())
+                parameter_entry_dict[key].value = int(widget.get())
 
 def create_labeled_entry_box(parent, text, font):
     frame = Frame(parent)
@@ -149,6 +162,7 @@ def create_labeled_entry_box(parent, text, font):
 class Parameter:
     def __init__(self, name, default_value, entry_frame):
         self.name = name
+        self.value = None
         self.default_value = default_value
         self.entry_frame = entry_frame
 
