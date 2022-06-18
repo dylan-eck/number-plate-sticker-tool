@@ -66,8 +66,10 @@ def generate_stickers():
         color = row[1]
         subgroup = row[2]
 
-        skills = row[3:]
+        skills = row[3:7]
         skills_str = f'{skills[0]}{skills[1]}{skills[2]}{skills[3]}'
+
+        time = row[7]
 
         image = Image.new(
             mode="RGB",
@@ -100,12 +102,12 @@ def generate_stickers():
             fill=None
         )
 
-        main_font = ImageFont.truetype("Arial.ttf", font_size)
-        sub_font = ImageFont.truetype("Arial.ttf", int(font_size * 0.8))
+        main_font = ImageFont.truetype("arial.ttf", font_size)
+        sub_font = ImageFont.truetype("arial.ttf", int(font_size * 0.7))
 
         x0, y0, x1, y1 = draw.textbbox(
             (sticker_width / 2, sticker_height / 2),
-            f'{plate_number}\n{skills_str}',
+            f'{plate_number}\n{skills_str}\n{time}',
             font=main_font,
             anchor='mm'
         )
@@ -121,16 +123,24 @@ def generate_stickers():
         )
         
         draw.text(
-            (sticker_width / 2, sticker_height / 2 - font_size / 2),
-            plate_number,
+            (sticker_width / 2, sticker_height / 2 - font_size),
+            str(plate_number),
             fill="Black",
             font=main_font,
             anchor='mm'
         )
 
         draw.text(
-            (sticker_width / 2, sticker_height / 2 + font_size / 2),
-            f'{skills_str}',
+            (sticker_width / 2, sticker_height / 2),
+            skills_str,
+            fill="Black",
+            font = sub_font,
+            anchor='mm'
+        )
+
+        draw.text(
+            (sticker_width / 2, sticker_height / 2 + font_size),
+            str(time),
             fill="Black",
             font = sub_font,
             anchor='mm'
