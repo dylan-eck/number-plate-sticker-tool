@@ -109,7 +109,6 @@ def generate_stickers():
         elif platform.system() == 'Darwin':
             fontname = 'Arial.ttf'
 
-        print(platform.system())
         main_font = ImageFont.truetype(fontname, font_size)
         sub_font = ImageFont.truetype(fontname, int(font_size * 0.7))
 
@@ -154,13 +153,13 @@ def generate_stickers():
             anchor='mm'
         )
 
+        image_buffer.append(image)
+
         if len(image_buffer) == 24:
             sticker_sheet = create_sheet(image_buffer)
             sticker_sheet.save("out/sticker_sheet_" + str(num) + ".pdf")
             image_buffer = []
             num += 1
-        else:
-            image_buffer.append(image)
 
 def update_parameter_variables():
     global parameter_entry_dict
