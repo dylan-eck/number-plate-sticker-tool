@@ -1,4 +1,5 @@
 import os
+import platform
 import pandas as pd
 from PIL import (
     Image,
@@ -56,7 +57,7 @@ def generate_stickers():
     if not os.path.exists('out'):
         os.mkdir('out')
 
-    sticker_info = pd.read_excel(r'./stickers.xlsx').values.tolist()
+    sticker_info = pd.read_excel(filename).values.tolist()
 
     image_buffer = []
 
@@ -102,8 +103,15 @@ def generate_stickers():
             fill=None
         )
 
-        main_font = ImageFont.truetype("arial.ttf", font_size)
-        sub_font = ImageFont.truetype("arial.ttf", int(font_size * 0.7))
+        fontname = ''
+        if platform.system() == 'Windows':
+            fontname = 'arial.ttf'
+        elif platform.system() == 'Darwin':
+            fontname = 'Arial.ttf'
+
+        print(platform.system())
+        main_font = ImageFont.truetype(fontname, font_size)
+        sub_font = ImageFont.truetype(fontname, int(font_size * 0.7))
 
         x0, y0, x1, y1 = draw.textbbox(
             (sticker_width / 2, sticker_height / 2),
